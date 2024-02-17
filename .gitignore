@@ -396,3 +396,10 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Them's Fightin' Herds/SkullGirls
+
+*.sga.msb
+*.sgi.msb
+*.sgm.msb
+*.sgs.msb

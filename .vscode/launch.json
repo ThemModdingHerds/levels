@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "name": "C#: Levels.Test",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}\\test\\Levels.Test.csproj",
+            "launchConfigurationId": "TargetFramework=;Levels.Test"
+        }
+    ]
+}
