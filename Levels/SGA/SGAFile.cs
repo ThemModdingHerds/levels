@@ -1,7 +1,6 @@
 ﻿using ThemModdingHerds.IO.Binary;
-using ThemModdingHerds.Levels.SGA;
 
-namespace ThemModdingHerds.Levels;
+namespace ThemModdingHerds.Levels.SGA;
 public class SGAFile
 {
     public const string VERSION = "3.0";

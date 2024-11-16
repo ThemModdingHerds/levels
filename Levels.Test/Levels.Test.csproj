@@ -1,10 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\sgi\SGI.csproj" />
-    <ProjectReference Include="..\sga\SGA.csproj" />
-    <ProjectReference Include="..\sgm\SGM.csproj" />
-    <ProjectReference Include="..\sgs\SGS.csproj" />
+    <ProjectReference Include="..\Levels\Levels.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

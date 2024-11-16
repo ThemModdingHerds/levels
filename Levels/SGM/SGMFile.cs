@@ -1,8 +1,8 @@
+using System.Numerics;
 using ThemModdingHerds.IO.Binary;
 using ThemModdingHerds.Levels.SGM;
-using ThemModdingHerds.Levels.Common;
 
-namespace ThemModdingHerds.Levels;
+namespace ThemModdingHerds.Levels.SGM;
 public class SGMFile
 {
     public const string VERSION = "2.0";
@@ -20,7 +20,7 @@ public class SGMFile
     public float YRot {get; set;}
     public float ZRot {get; set;}
     public List<string> Bones {get; set;} = [];
-    public List<float[]> BoneProperties {get; set;} = [];
+    public List<Matrix4x4> BoneProperties {get; set;} = [];
 }
 public static class SGMFileExt
 {
@@ -55,7 +55,7 @@ public static class SGMFileExt
         file.YRot = reader.ReadFloat();
         file.ZRot = reader.ReadFloat();
         file.Bones = reader.ReadPascal64Strings(bones);
-        file.BoneProperties = reader.ReadMatrices(bones);
+        file.BoneProperties = reader.ReadMatrices4x4(bones);
         return file;
     }
     public static void Write(this Writer writer,SGMFile file)
@@ -81,6 +81,6 @@ public static class SGMFileExt
         writer.Write(file.YRot);
         writer.Write(file.ZRot);
         writer.WritePascal64Strings(file.Bones);
-        writer.WriteMatrices(file.BoneProperties);
+        writer.WriteMatrices4x4(file.BoneProperties);
     }
 }

@@ -1,32 +1,34 @@
-﻿using ThemModdingHerds.IO.Binary;
-using ThemModdingHerds.Levels.Common;
+﻿using System.Numerics;
+using ThemModdingHerds.IO.Binary;
 
 namespace ThemModdingHerds.Levels.SGS;
-public class Bone
+public class Bone(string name,uint parentBone,Matrix4x4 matrix)
 {
-    public string Name {get; set;} = string.Empty;
-    public uint ParentBone {get; set;}
+    public string Name {get; set;} = name;
+    public uint ParentBone {get; set;} = parentBone;
     public bool IsRootBone {get => ParentBone == 0xFFFFFFFF;}
-    public float[] Matrix {get; set;} = new float[16];
+    public Matrix4x4 Matrix {get; set;} = matrix;
+    public Bone(): this(string.Empty,0,Matrix4x4.Identity)
+    {
+
+    }
 }
 public static class BoneExt
 {
     public static Bone ReadSGSBone(this Reader reader)
     {
         reader.Endianness = IO.Endianness.Big;
-        return new()
-        {
-            Name = reader.ReadPascal64String(),
-            ParentBone = reader.ReadUInt(),
-            Matrix = reader.ReadMatrix()
-        };
+        string name = reader.ReadPascal64String();
+        uint parentBone = reader.ReadUInt();
+        Matrix4x4 matrix = reader.ReadMatrix4x4();
+        return new(name,parentBone,matrix);
     }
     public static void Write(this Writer writer,Bone bone)
     {
         writer.Endianness = IO.Endianness.Big;
         writer.WritePascal64String(bone.Name);
         writer.Write(bone.ParentBone);
-        writer.WriteMatrix(bone.Matrix);
+        writer.WriteMatrix4x4(bone.Matrix);
     }
     public static List<Bone> ReadSGSBones(this Reader reader,ulong count)
     {

@@ -1,12 +1,12 @@
+using System.Numerics;
 using ThemModdingHerds.IO.Binary;
-using ThemModdingHerds.Levels.Common;
 
 namespace ThemModdingHerds.Levels.SGI;
 public class Element : List<Animation>
 {
     public string Name {get; set;} = string.Empty;
     public string Shape {get; set;} = string.Empty;
-    public float[] Matrix {get; set;} = new float[16];
+    public Matrix4x4 Matrix {get; set;} = Matrix4x4.Identity;
     public byte IsVisible {get; set;}
     // TODO: find out what this is
     public byte Unknown {get; set;}
@@ -20,7 +20,7 @@ public static class ElementExt
         {
             Name = reader.ReadPascal64String(),
             Shape = reader.ReadPascal64String(),
-            Matrix = reader.ReadMatrix(),
+            Matrix = reader.ReadMatrix4x4(),
             IsVisible = reader.ReadByte(),
             Unknown = reader.ReadByte()
         };
@@ -32,7 +32,7 @@ public static class ElementExt
         writer.Endianness = IO.Endianness.Big;
         writer.WritePascal64String(element.Name);
         writer.WritePascal64String(element.Shape);
-        writer.WriteMatrix(element.Matrix);
+        writer.WriteMatrix4x4(element.Matrix);
         writer.Write(element.IsVisible);
         writer.Write(element.Unknown);
         writer.Write((ulong)element.Count);
