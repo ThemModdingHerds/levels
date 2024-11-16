@@ -7,15 +7,8 @@ parser/writer of Them's Fightin' Herds `worlds.ini` files in `levels.gfs`
 ```c#
 using ThemModdingHerds.Levels;
 
-// parse string to get entries
-Worlds worlds = Worlds.Parse(content);
-// you can even read it from a file
-Worlds worlds = Worlds.Read("path/to/worlds.ini");
-// Worlds is extending List<WorldEntry>
-WorldEntry entry = worlds[0];
-
-// write all entries into a valid worlds.ini structure
-string filecontent = worlds.ToString();
+LevelData levelData = LevelData.Read(folderWithLvlNextToIt);
+Level lvl = levelData.Lvl; // contains data from .lvl file
 ```
 
 ## Syntax
