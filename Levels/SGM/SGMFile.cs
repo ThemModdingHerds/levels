@@ -1,6 +1,8 @@
+using System.Drawing;
 using System.Numerics;
 using ThemModdingHerds.IO.Binary;
-using ThemModdingHerds.Levels.SGM;
+using ThemModdingHerds.Levels.Models;
+using ThemModdingHerds.Levels.Models.Wavefront;
 
 namespace ThemModdingHerds.Levels.SGM;
 public class SGMFile
@@ -21,6 +23,14 @@ public class SGMFile
     public float ZRot {get; set;}
     public List<string> Bones {get; set;} = [];
     public List<Matrix4x4> BoneProperties {get; set;} = [];
+    public WavefrontModel WavefrontModel {
+        get
+        {
+            List<IFace> faces = [..from face in Triangles select face.ToFace()];
+            List<Vertex> vertices = Vertex.FromSGM(this);
+            return new(vertices,faces);
+        }
+    }
 }
 public static class SGMFileExt
 {
