@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text.Json.Serialization;
+using ThemModdingHerds.Levels.Utils;
 
 namespace ThemModdingHerds.Levels;
 public class Reverb(ReverbOptions type,float wetness)
@@ -14,7 +15,7 @@ public class Reverb(ReverbOptions type,float wetness)
     }
     public override string ToString()
     {
-        return $"Reverb: {Type} {Wetness}";
+        return $"Reverb: {Type} {Strings.FloatString(Wetness)}";
     }
     public static Reverb Parse(string s)
     {

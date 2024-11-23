@@ -24,5 +24,8 @@ public enum ReverbOptions
     PLAIN,
     PARKINGLOT,
     SEWERPIPE,
-    UNDERWATER
+    UNDERWATER,
+    // Only in Them's Fightin' Herds
+    PLAINS, // is it like PLAIN?
+    Generic // this is just GENERIC, right?
 }

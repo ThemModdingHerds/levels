@@ -18,7 +18,7 @@ public class Projection(float unknown,float unknown2,float unknown3,float unknow
     }
     public static Projection Parse(string s)
     {
-        float[] values = LevelParsers.ParseSameMultiple<float>(s,"PROJ",5);
+        float[] values = LevelParsers.ParseMultipleFloats(s,"PROJ",5);
         return new(values[0],values[1],values[2],values[3],values[4]);
     }
 }

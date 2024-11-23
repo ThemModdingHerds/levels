@@ -1,25 +1,18 @@
 ﻿using ThemModdingHerds.IO.Binary;
-using ThemModdingHerds.Levels.Models;
-using ThemModdingHerds.Levels.Models.Wavefront;
 
 namespace ThemModdingHerds.Levels.SGM;
-public class Triangle
+public class Triangle(short x,short y,short z)
 {
-    public short Z {get; set;}
-    public short Y {get; set;}
-    public short X {get; set;}
-    public Face ToFace()
+    public short X {get; set;} = x;
+    public short Y {get; set;} = y;
+    public short Z {get; set;} = z;
+    public Triangle(): this(0,0,0)
     {
-        return new(X,Y,Z);
+
     }
-    public static Triangle FromFace(IFace face)
+    public override string ToString()
     {
-        return new()
-        {
-            X = (short)face.X,
-            Y = (short)face.Y,
-            Z = (short)face.Z
-        };
+        return $"[{X},{Y},{Z}]";
     }
 }
 public static class TriangleExt
@@ -27,12 +20,10 @@ public static class TriangleExt
     public static Triangle ReadSGMTriangle(this Reader reader)
     {
         reader.Endianness = IO.Endianness.Big;
-        return new()
-        {
-            X = reader.ReadShort(),
-            Y = reader.ReadShort(),
-            Z = reader.ReadShort()
-        };
+        short x = reader.ReadShort();
+        short y = reader.ReadShort();
+        short z = reader.ReadShort();
+        return new(x,y,z);
     }
     public static void Write(this Writer writer,Triangle Triangle)
     {

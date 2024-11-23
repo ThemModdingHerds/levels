@@ -3,16 +3,16 @@ using System.Numerics;
 using System.Text.Json.Serialization;
 
 namespace ThemModdingHerds.Levels;
-public class PtLight(byte red,byte green,byte blue,int x1,int y1,int x2,int y2) : ILight, IColor
+public class PtLight(ushort red,ushort green,ushort blue,int x1,int y1,int x2,int y2) : ILight, IColor
 {
     [JsonPropertyName("type")]
     public string Type => "Pt";
     [JsonPropertyName("red")]
-    public byte Red {get; set;} = red;
+    public ushort Red {get; set;} = red;
     [JsonPropertyName("green")]
-    public byte Green {get; set;} = green;
+    public ushort Green {get; set;} = green;
     [JsonPropertyName("blue")]
-    public byte Blue {get; set;} = blue;
+    public ushort Blue {get; set;} = blue;
     [JsonPropertyName("x1")]
     public int X1 {get; set;} = x1;
     [JsonPropertyName("y1")]
@@ -31,7 +31,7 @@ public class PtLight(byte red,byte green,byte blue,int x1,int y1,int x2,int y2) 
     {
 
     }
-    public PtLight(byte red,byte green,byte blue,Vector2 from,Vector2 to): this(red,green,blue,(int)from.X,(int)from.Y,(int)to.X,(int)to.Y)
+    public PtLight(ushort red,ushort green,ushort blue,Vector2 from,Vector2 to): this(red,green,blue,(int)from.X,(int)from.Y,(int)to.X,(int)to.Y)
     {
 
     }
@@ -50,6 +50,6 @@ public class PtLight(byte red,byte green,byte blue,int x1,int y1,int x2,int y2) 
     public static PtLight Parse(string s)
     {
         int[] values = LevelParsers.ParseSameMultiple<int>(s,"Light: Pt",7);
-        return new((byte)values[0],(byte)values[1],(byte)values[2],values[3],values[4],values[5],values[6]);
+        return new((ushort)values[0],(ushort)values[1],(ushort)values[2],values[3],values[4],values[5],values[6]);
     }
 }

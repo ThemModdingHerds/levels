@@ -68,6 +68,18 @@ public class Level : IParsable<Level>
             $"Music_Outro {MusicOutro}"
         ]);
     }
+    public void Save(string file,bool overwrite = true)
+    {
+        if(!file.EndsWith(".lvl"))
+            throw new Exception("file does not end with .lvl");
+        if(File.Exists(file))
+        {
+            if(!overwrite)
+                throw new Exception($"{file} already exists");
+            File.Delete(file);
+        }
+        File.WriteAllText(file,ToString());
+    }
     public static Level Read(string path) => Parse(File.ReadAllText(path));
     public static Level Parse(string s,IFormatProvider? provider)
     {

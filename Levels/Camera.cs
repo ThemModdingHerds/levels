@@ -1,14 +1,15 @@
+using System.Numerics;
 using System.Text.Json.Serialization;
 
 namespace ThemModdingHerds.Levels;
-public class Camera(long fov,long near,long far)
+public class Camera(long fov,long near,BigInteger far)
 {
     [JsonPropertyName("fov")]
     public long FieldOfView {get; set;} = fov;
     [JsonPropertyName("near")]
     public long ZNear {get; set;} = near;
     [JsonPropertyName("far")]
-    public long ZFar {get; set;} = far;
+    public BigInteger ZFar {get; set;} = far;
     public Camera(): this(90,0,0)
     {
 
@@ -19,7 +20,7 @@ public class Camera(long fov,long near,long far)
     }
     public static Camera Parse(string s)
     {
-        long[] values = LevelParsers.ParseSameMultiple<long>(s,"CAMERA",3);
-        return new(values[0],values[1],values[2]);
+        string[] values = LevelParsers.ParseParts(s,"CAMERA",3);
+        return new(long.Parse(values[0]),long.Parse(values[1]),BigInteger.Parse(values[2]));
     }
 }

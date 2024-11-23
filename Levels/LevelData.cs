@@ -9,73 +9,103 @@ public class LevelData(string name,Level lvl)
 {
     public string Name {get;set;} = name;
     public Level Lvl {get;set;} = lvl;
-    public Dictionary<string,SGAFile> SGA {get;set;} = [];
-    public Dictionary<string,SGIFile> SGI {get;set;} = [];
-    public Dictionary<string,SGMFile> SGM {get;set;} = [];
-    public Dictionary<string,SGSFile> SGS {get;set;} = [];
+    public Dictionary<string,SkullGirlsAnimation> Animations {get;set;} = [];
+    public SkullGirlsIndex? Background {get;set;} = new();
+    public Dictionary<string,SkullGirlsModel> Models {get;set;} = [];
+    public Dictionary<string,SkullGirlsSkeleton> Skeletons {get;set;} = [];
     public LevelData(): this(string.Empty,new())
     {
 
     }
-    public void Write(string path,string? name)
+    public SkullGirlsModel? GetModelFromElement(Element element)
     {
-        string folder = Path.Combine(path,name ?? Name);
-        string lvl = $"{folder}.lvl";
-        Directory.CreateDirectory(folder);
-        File.WriteAllText(lvl,Lvl.ToString());
-        foreach(var pair in SGA)
+        string key = $"{element.Name}.sgm.msb";
+        if(Models.TryGetValue(key,out SkullGirlsModel? sgm))
+            return sgm;
+        return null;
+    }
+    public SkullGirlsAnimation? GetAnimationFromElementAnimation(Animation animation)
+    {
+        string key = $"{animation.FileName}.sga.msb";
+        if(Animations.TryGetValue(key,out SkullGirlsAnimation? sga))
+            return sga;
+        return null;
+    }
+    public List<SkullGirlsAnimation> GetAnimationsFromElement(Element element)
+    {
+        return [..from animation in element.Animations select GetAnimationFromElementAnimation(animation)];
+    }
+    public void Save(string path,bool overwrite = true)
+    {
+        string folder = Path.Combine(path,Name);
+        string lvlfile = $"{folder}.lvl";
+        if(Background != null) 
         {
-            string filepath = pair.Key;
+            Directory.CreateDirectory(folder);
+            string filepath = Path.Combine(folder,SkullGirlsIndex.FILENAME);
             Writer writer = new(filepath);
-            writer.Write(pair.Value);
+            writer.Write(Background);
+            writer.Close();
+            foreach(var pair in Animations)
+            {
+                filepath = Path.Combine(folder,pair.Key);
+                writer = new(filepath);
+                writer.Write(pair.Value);
+                writer.Close();
+            }
+            foreach(var pair in Models)
+            {
+                filepath = Path.Combine(folder,pair.Key);
+                writer = new(filepath);
+                writer.Write(pair.Value);
+                writer.Close();
+            }
+            foreach(var pair in Skeletons)
+            {
+                filepath = Path.Combine(folder,pair.Key);
+                writer = new(filepath);
+                writer.Write(pair.Value);
+                writer.Close();
+            }
         }
-        foreach(var pair in SGI)
-        {
-            string filepath = pair.Key;
-            Writer writer = new(filepath);
-            writer.Write(pair.Value);
-        }
-        foreach(var pair in SGM)
-        {
-            string filepath = pair.Key;
-            Writer writer = new(filepath);
-            writer.Write(pair.Value);
-        }
-        foreach(var pair in SGS)
-        {
-            string filepath = pair.Key;
-            Writer writer = new(filepath);
-            writer.Write(pair.Value);
-        }
+        Lvl.Save(lvlfile,overwrite);
+    }
+    public override string ToString()
+    {
+        return Name;
     }
     public static LevelData Read(string path)
     {
         string name = Path.GetFileName(path);
         Level level = Level.Read($"{path}.lvl");
-        string[] files = Directory.GetFiles(path);
-        Dictionary<string,SGAFile> sga = [];
-        Dictionary<string,SGIFile> sgi = [];
-        Dictionary<string,SGMFile> sgm = [];
-        Dictionary<string,SGSFile> sgs = [];
+        string[] files = Directory.Exists(path) ? Directory.GetFiles(path) : [];
+        Dictionary<string,SkullGirlsAnimation> animations = [];
+        Dictionary<string,SkullGirlsModel> models = [];
+        Dictionary<string,SkullGirlsSkeleton> skeletons = [];
+        SkullGirlsIndex? background = null;
+        if(Directory.Exists(path))
+        {
+            string backgroundPath = Path.Combine(path,SkullGirlsIndex.FILENAME);
+            Reader backgroundReader = new(backgroundPath);
+            background = backgroundReader.ReadSGIFile();
+        }
         foreach(string file in files)
         {
             string filename = Path.GetFileName(file);
             Reader reader = new(file);
             if(file.EndsWith(".sga.msb"))
-                sga.Add(filename,reader.ReadSGAFile());
-            if(file.EndsWith(".sgi.msb"))
-                sgi.Add(filename,reader.ReadSGIFile());
+                animations.Add(filename,reader.ReadSGAFile());
             if(file.EndsWith(".sgm.msb"))
-                sgm.Add(filename,reader.ReadSGMFile());
+                models.Add(filename,reader.ReadSGMFile());
             if(file.EndsWith(".sgs.msb"))
-                sgs.Add(filename,reader.ReadSGSFile());
+                skeletons.Add(filename,reader.ReadSGSFile());
         }
         return new(name,level)
         {
-            SGA = sga,
-            SGI = sgi,
-            SGM = sgm,
-            SGS = sgs
+            Animations = animations,
+            Background = background,
+            Models = models,
+            Skeletons = skeletons
         };
     }
 }

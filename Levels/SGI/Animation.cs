@@ -1,21 +1,27 @@
 using ThemModdingHerds.IO.Binary;
 
 namespace ThemModdingHerds.Levels.SGI;
-public class Animation
+public class Animation(string name,string filename)
 {
-    public string Name {get; set;} = string.Empty;
-    public string FileName {get; set;} = string.Empty;
+    public string Name {get; set;} = name;
+    public string FileName {get; set;} = filename;
+    public Animation(): this(string.Empty,string.Empty)
+    {
+
+    }
+    public override string ToString()
+    {
+        return $"{Name} -> {FileName}";
+    }
 }
 public static class AnimationExt
 {
     public static Animation ReadSGIAnimation(this Reader reader)
     {
         reader.Endianness = IO.Endianness.Big;
-        return new Animation()
-        {
-            Name = reader.ReadPascal64String(),
-            FileName = reader.ReadPascal64String()
-        };
+        string name = reader.ReadPascal64String();
+        string filename = reader.ReadPascal64String();
+        return new(name,filename);
     }
     public static void Write(this Writer writer,Animation animation)
     {

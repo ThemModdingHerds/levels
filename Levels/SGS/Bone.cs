@@ -4,13 +4,22 @@ using ThemModdingHerds.IO.Binary;
 namespace ThemModdingHerds.Levels.SGS;
 public class Bone(string name,uint parentBone,Matrix4x4 matrix)
 {
+    public const uint ROOTBONE = 0xFFFFFFFF;
     public string Name {get; set;} = name;
     public uint ParentBone {get; set;} = parentBone;
-    public bool IsRootBone {get => ParentBone == 0xFFFFFFFF;}
+    public bool IsRootBone {get => ParentBone == ROOTBONE;}
     public Matrix4x4 Matrix {get; set;} = matrix;
-    public Bone(): this(string.Empty,0,Matrix4x4.Identity)
+    public Bone(string name,Matrix4x4 matrix): this(name,ROOTBONE,matrix)
     {
 
+    }
+    public Bone(): this(string.Empty,Matrix4x4.Identity)
+    {
+
+    }
+    public override string ToString()
+    {
+        return Name;
     }
 }
 public static class BoneExt

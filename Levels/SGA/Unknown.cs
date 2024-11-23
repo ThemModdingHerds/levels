@@ -2,20 +2,22 @@ using System.Text;
 using ThemModdingHerds.IO.Binary;
 
 namespace ThemModdingHerds.Levels.SGA;
-public class Unknown
+public class Unknown(byte[] data)
 {
-    public byte[] Data {get; set;} = new byte[4];
-    public string DataString {get => Encoding.ASCII.GetString(Data);}
+    public const int DATA_SIZE = 4;
+    public byte[] Data {get; set;} = data;
+    public Unknown(): this(new byte[DATA_SIZE])
+    {
+
+    }
 }
 public static class UnknownExt
 {
     public static Unknown ReadSGAUnknown(this Reader reader)
     {
         reader.Endianness = IO.Endianness.Big;
-        return new()
-        {
-            Data = [reader.ReadByte(),reader.ReadByte(),reader.ReadByte(),reader.ReadByte()]
-        };
+        byte[] data = reader.ReadBytes(Unknown.DATA_SIZE);
+        return new(data);
     }
     public static void Write(this Writer writer,Unknown unknown)
     {

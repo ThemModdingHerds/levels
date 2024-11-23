@@ -4,16 +4,16 @@ using System.Numerics;
 using System.Text.Json.Serialization;
 
 namespace ThemModdingHerds.Levels;
-public class DirLight(byte red,byte green,byte blue,float x,float y,float z) : ILight, IColor
+public class DirLight(ushort red,ushort green,ushort blue,float x,float y,float z) : ILight, IColor
 {
     [JsonPropertyName("type")]
     public string Type => "Dir";
     [JsonPropertyName("red")]
-    public byte Red {get; set;} = red;
+    public ushort Red {get; set;} = red;
     [JsonPropertyName("green")]
-    public byte Green {get; set;} = green;
+    public ushort Green {get; set;} = green;
     [JsonPropertyName("blue")]
-    public byte Blue {get; set;} = blue;
+    public ushort Blue {get; set;} = blue;
     [JsonPropertyName("x")]
     public float X {get;set;} = x;
     [JsonPropertyName("y")]
@@ -28,7 +28,7 @@ public class DirLight(byte red,byte green,byte blue,float x,float y,float z) : I
     {
 
     }
-    public DirLight(byte red,byte green,byte blue,Vector3 position): this(red,green,blue,position[0],position[1],position[3])
+    public DirLight(ushort red,ushort green,ushort blue,Vector3 position): this(red,green,blue,position[0],position[1],position[3])
     {
 
     }
