@@ -19,7 +19,7 @@ public class LevelPack(string folder,IEnumerable<string> textures,WorldData worl
     public void Save(string folder,bool overwrite = true)
     {
         Directory.CreateDirectory(folder);
-        string worldspath = Path.Combine(folder,WorldData.FILENAME);
+        string worldspath = Path.Combine(folder,Worlds.FileName);
         Worlds.Save(worldspath,overwrite);
         foreach(LevelData level in Levels)
             level.Save(folder,overwrite);
@@ -35,9 +35,16 @@ public class LevelPack(string folder,IEnumerable<string> textures,WorldData worl
     public static LevelPack Read(string folder)
     {
         string worldspath = Path.Combine(folder,WorldData.FILENAME);
-        if(!File.Exists(worldspath))
-            File.WriteAllText(worldspath,new WorldData().ToString());
-        WorldData worlds = WorldData.Read(worldspath);
+        string stagespath = Path.Combine(folder,WorldData.SG_FILENAME);
+        string? worldpath = null;
+        if(worldpath == null && File.Exists(stagespath))
+            worldpath = stagespath;
+        if(worldpath == null &&  File.Exists(worldspath))
+            worldpath = worldspath;
+        worldpath ??= worldspath;
+        if(!File.Exists(worldpath))
+            File.WriteAllText(worldpath,new WorldData().ToString());
+        WorldData worlds = WorldData.Read(worldpath);
         List<LevelData> levels = [];
         foreach(WorldEntry world in worlds.Entries)
         {

@@ -90,13 +90,13 @@ public class Level : IParsable<Level>
             if(line.StartsWith("StageSize:"))
                 level.StageSize = LevelParsers.ParseStageSize(line);
             if(line.StartsWith("BottomClearance:"))
-                level.BottomClearance = int.Parse(LevelParsers.ParseRest(line,"BottomClearance:"));
+                level.BottomClearance = int.Parse(Strings.ParseRest(line,"BottomClearance:"));
             if(line.StartsWith("Start1:"))
-                level.Start1 = int.Parse(LevelParsers.ParseRest(line,"Start1:"));
+                level.Start1 = int.Parse(Strings.ParseRest(line,"Start1:"));
             if(line.StartsWith("Start2:"))
-                level.Start2 = int.Parse(LevelParsers.ParseRest(line,"Start2:"));
+                level.Start2 = int.Parse(Strings.ParseRest(line,"Start2:"));
             if(line.StartsWith("ShadowDir:"))
-                level.ShadowDir = char.Parse(LevelParsers.ParseRest(line,"ShadowDir:"));
+                level.ShadowDir = char.Parse(Strings.ParseRest(line,"ShadowDir:"));
             if(line.StartsWith("Light: Amb"))
                 level.Lights.Add(AmbLight.Parse(line));
             if(line.StartsWith("Light: Pt"))
@@ -106,23 +106,23 @@ public class Level : IParsable<Level>
             if(line.StartsWith("PROJ"))
                 level.Projection = Projection.Parse(line);
             if(line.StartsWith("SHADOWDIST"))
-                level.ShadowDistance = int.Parse(LevelParsers.ParseRest(line,"SHADOWDIST"));
+                level.ShadowDistance = int.Parse(Strings.ParseRest(line,"SHADOWDIST"));
             if(line.StartsWith("Reverb:"))
                 level.Reverb = Reverb.Parse(line);
             if(line.StartsWith("2D"))
-                level.Background2D.Path = LevelParsers.ParseRest(line,"2D");
+                level.Background2D.Path = Strings.ParseRest(line,"2D");
             if(line.StartsWith("3D"))
                 level.Background3D = Background3D.Parse(line);
             if(line.StartsWith("CAMERA"))
                 level.Camera = Camera.Parse(line);
             if(line.StartsWith("Music_Intro"))
-                level.MusicIntro = LevelParsers.ParseRest(line,"Music_Intro");
+                level.MusicIntro = Strings.ParseRest(line,"Music_Intro");
             if(line.StartsWith("Music_Loop"))
-                level.MusicLoop = LevelParsers.ParseRest(line,"Music_Loop");
+                level.MusicLoop = Strings.ParseRest(line,"Music_Loop");
             if(line.StartsWith("Music_InterruptIntro"))
-                level.MusicInterruptIntro = int.Parse(LevelParsers.ParseRest(line,"Music_InterruptIntro"));
+                level.MusicInterruptIntro = int.Parse(Strings.ParseRest(line,"Music_InterruptIntro"));
             if(line.StartsWith("Music_Outro"))
-                level.MusicOutro = LevelParsers.ParseRest(line,"Music_Outro");
+                level.MusicOutro = Strings.ParseRest(line,"Music_Outro");
         }
         return level;
     }

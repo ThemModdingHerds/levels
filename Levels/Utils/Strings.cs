@@ -19,4 +19,24 @@ public static class Strings
     {
         return value.ToString(CultureInfo.InvariantCulture);
     }
+    
+    public static string ParseRest(string line,string start)
+    {
+        return line[start.Length..].Trim();
+    }
+    public static string[] ParseParts(string line)
+    {
+        return line.Split(' ').Where((s) => s != string.Empty).ToArray();
+    }
+    public static string[] ParseParts(string line,string start)
+    {
+        return ParseParts(ParseRest(line,start));
+    }
+    public static string[] ParseParts(string line,string start,int count)
+    {
+        string[] parts = ParseParts(line,start);
+        if(parts.Length != count)
+            throw new Exception($"found {parts.Length} parts, expected {count}");
+        return parts;
+    }
 }

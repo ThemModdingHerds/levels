@@ -2,7 +2,7 @@
 
 ## `worlds.ini`
 
-### Entry
+### Entry (`worlds.ini`)
 
 `<type> <name> [prop_key] prop_value [prop_key2] prop_value2 ...`
 
@@ -20,6 +20,12 @@
 - `[desc]` properties are required (for stage select)
 - `[img]`,`[dlc]` and `[tags]` properties are optional
 - `\n` and `\r` (if on windows) are ignored
+
+## `stages.ini`
+
+### Entry (`stages.ini`)
+
+`<type> <name> <stage_select_picture_name> prop_key>prop_value prop_key2>prop_value...`
 
 ## `*.lvl`
 

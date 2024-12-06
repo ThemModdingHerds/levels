@@ -1,5 +1,7 @@
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
+using ThemModdingHerds.Levels.Utils;
 
 namespace ThemModdingHerds.Levels.Worlds;
 public class WorldEntry(string type,string name,Dictionary<string,string> props) : IParsable<WorldEntry>
@@ -49,64 +51,46 @@ public class WorldEntry(string type,string name,Dictionary<string,string> props)
     }
     public override string ToString()
     {
-        return $"{Type} {Name} {string.Join(' ',from x in Properties select $"[{x.Key}] {x.Value}")}";
+        return ToString(false);
+    }
+    public string ToString(bool stage)
+    {
+        return stage ? BuildStageEntry() : BuildWorldEntry();
+    }
+    public string BuildWorldEntry()
+    {
+        return $"{Type} {Name} {string.Join(' ',from x in Properties select $"[{x.Key}] {x.Value}")}".Trim();
+    }
+    public string BuildStageEntry()
+    {
+        return $"{Type} {Name} {Image} {string.Join(' ',from x in Properties select $"{x.Key}>{x.Value}")}".Trim();
     }
     public static WorldEntry Parse(string s,IFormatProvider? provider)
     {
-        string buffer = string.Empty;
-        string? type = null;
-        string? name = null;
         Dictionary<string,string> props = [];
-        for(int i = 0;i < s.Length;i++)
+        string[] parts = Strings.ParseParts(s);
+        string type = parts[0];
+        string name = parts[1];
+        if(parts.Length > 2)
         {
-            char letter = s[i];
-            if(type == null)
+            if(s.Contains('['))
+            for(int i = 2;i < parts.Length;i++)
             {
-                if(letter == ' ')
-                {
-                    type = buffer.Trim();
-                    buffer = string.Empty;
-                    continue;
-                }
-                buffer += letter;
-                continue;
+                string key = parts[i];
+                i++;
+                string value = parts[i];
+                props.Add(key[1..key.IndexOf(']')],value);
             }
-            if(name == null)
+            else if(s.Contains('>'))
             {
-                if(letter == ' ')
+                props.Add(IMAGE_KEY,parts[2]);
+                for(int i = 3;i < parts.Length;i++)
                 {
-                    name = buffer.Trim();
-                    buffer = string.Empty;
-                    continue;
+                    string[] prop = parts[i].Split('>');
+                    props.Add(prop[0],prop[1]);
                 }
-                buffer += letter;
-                continue;
-            }
-            if(!s.Contains('['))
-                break;
-            if(letter == '[')
-            {
-                int keyStart = i + 1;
-                int keyEnd = s.IndexOf(']',i);
-                if(keyEnd == -1)
-                    throw new Exception("no end tag was found!");
-                string key = s[keyStart..keyEnd].Trim();
-                i = keyEnd + 1;
-                while(s[i] == ' ')
-                    i++;
-                int valueEnd = s.IndexOf(' ',i);
-                if(valueEnd == -1)
-                    valueEnd = s.Length;
-                string value = s[i..valueEnd].Trim();
-                props.Add(key,value);
             }
         }
-        if(name == null && buffer.Length > 0)
-            name = buffer;
-        if(type == null)
-            throw new Exception("couldn't get type");
-        if(name == null)
-            throw new Exception("couldn't get name");
         return new(type,name,props);
     }
     public static WorldEntry Parse(string s) => Parse(s,null);

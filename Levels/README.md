@@ -30,8 +30,8 @@ Example:
 /mylevelpack/textures/mycustomstagetexture.dds # a texture that mycustomstage references
 ```
 
-## Syntax
+you can open a pack by using the static method `Read`
 
-See [here][syntax-file] for more info
-
-[syntax-file]: ./SYNTAX.md
+```c#
+LevelPack pack = LevelPack.Read(pathToFolderWithWorldsIni);
+```

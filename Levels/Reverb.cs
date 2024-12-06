@@ -19,7 +19,7 @@ public class Reverb(ReverbOptions type,float wetness)
     }
     public static Reverb Parse(string s)
     {
-        string rest = LevelParsers.ParseRest(s,"Reverb:");
+        string rest = Strings.ParseRest(s,"Reverb:");
         ReverbOptions? type = null;
         float? wetness = null;
         string buffer = string.Empty;

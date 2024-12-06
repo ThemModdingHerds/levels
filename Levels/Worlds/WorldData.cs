@@ -4,11 +4,21 @@ using ThemModdingHerds.Levels.Utils;
 
 namespace ThemModdingHerds.Levels.Worlds;
 
-public class WorldData(IEnumerable<WorldEntry> entries) : IParsable<WorldData>
+public class WorldData(string filename,IEnumerable<WorldEntry> entries) : IParsable<WorldData>
 {
     public const string FILENAME = "worlds.ini";
+    public const string SG_FILENAME = "stages.ini";
+    public string FileName {get;set;} = filename;
     public List<WorldEntry> Entries {get;set;} = [..entries];
-    public WorldData(): this([])
+    public WorldData(string filename): this(filename,[])
+    {
+
+    }
+    public WorldData(IEnumerable<WorldEntry> entries): this(FILENAME,entries)
+    {
+
+    }
+    public WorldData(): this(FILENAME,[])
     {
 
     }
@@ -18,8 +28,9 @@ public class WorldData(IEnumerable<WorldEntry> entries) : IParsable<WorldData>
     }
     public void Save(string file,bool overwrite = true)
     {
-        if(Path.GetFileName(file) != FILENAME)
-            throw new Exception($"file be called '{FILENAME}'");
+        string filename = Path.GetFileName(file);
+        if(filename != FileName)
+            throw new Exception($"file needs to be called '{FileName}'");
         if(File.Exists(file))
         {
             if(!overwrite)
@@ -40,7 +51,13 @@ public class WorldData(IEnumerable<WorldEntry> entries) : IParsable<WorldData>
         }
         return worlds;
     }
-    public static WorldData Read(string path) => Parse(File.ReadAllText(path));
+    public static WorldData Read(string path)
+    {
+        string filename = Path.GetFileName(path);
+        WorldData worlds = Parse(File.ReadAllText(path));
+        worlds.FileName = filename;
+        return worlds;
+    }
     public static WorldData Parse(string s,IFormatProvider? provider)
     {
         IEnumerable<string> lines = Strings.RemoveComments(s).Split('\n');

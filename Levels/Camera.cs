@@ -1,5 +1,6 @@
 using System.Numerics;
 using System.Text.Json.Serialization;
+using ThemModdingHerds.Levels.Utils;
 
 namespace ThemModdingHerds.Levels;
 public class Camera(long fov,long near,BigInteger far)
@@ -20,7 +21,7 @@ public class Camera(long fov,long near,BigInteger far)
     }
     public static Camera Parse(string s)
     {
-        string[] values = LevelParsers.ParseParts(s,"CAMERA",3);
+        string[] values = Strings.ParseParts(s,"CAMERA",3);
         return new(long.Parse(values[0]),long.Parse(values[1]),BigInteger.Parse(values[2]));
     }
 }

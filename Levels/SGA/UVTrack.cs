@@ -7,7 +7,7 @@ public class UVTrack(string type,IEnumerable<Vector2> frames,IEnumerable<Unknown
     public string Type {get; set;} = type;
     public List<Vector2> AnimationFrames {get; set;} = [..frames];
     // TODO: find out what this is
-    public List<Unknown> Unknown {get; set;} = [..unknowns];
+    public List<Unknown> Unknowns {get; set;} = [..unknowns];
     public List<Vector2> Time {get; set;} = [..time];
     public UVTrack(string type): this(type,[],[],[])
     {
@@ -19,7 +19,7 @@ public class UVTrack(string type,IEnumerable<Vector2> frames,IEnumerable<Unknown
     }
     public override string ToString()
     {
-        return $"{Type}:{AnimationFrames.Count}:{Unknown.Count}:{Time.Count}";
+        return $"{Type}:{AnimationFrames.Count}:{Unknowns.Count}:{Time.Count}";
     }
 }
 public static class UVTrackExt
@@ -37,8 +37,11 @@ public static class UVTrackExt
     {
         writer.Endianness = IO.Endianness.Big;
         writer.WritePascal64String(track.Type);
+        writer.Write((ulong)track.AnimationFrames.Count);
         writer.WriteVectors2(track.AnimationFrames);
-        writer.Write(track.Unknown);
+        writer.Write((ulong)track.Unknowns.Count);
+        writer.Write(track.Unknowns);
+        writer.Write((ulong)track.Time.Count);
         writer.WriteVectors2(track.Time);
     }
     public static List<UVTrack> ReadSGAUVTracks(this Reader reader,ulong count)

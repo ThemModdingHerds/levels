@@ -5,9 +5,9 @@ namespace ThemModdingHerds.Levels.SGA;
 public class Bone(string name,IEnumerable<Vector3> unknown1s,IEnumerable<Vector4> unknown2s,IEnumerable<Vector3> unknown3s)
 {
     public string Name {get; set;} = name;
-    public List<Vector3> Unknown2s {get; set;} = [..unknown1s];
-    public List<Vector4> Unknown3s {get; set;} = [..unknown2s];
-    public List<Vector3> Unknown4s {get; set;} = [..unknown3s];
+    public List<Vector3> Unknown1s {get; set;} = [..unknown1s];
+    public List<Vector4> Unknown2s {get; set;} = [..unknown2s];
+    public List<Vector3> Unknown3s {get; set;} = [..unknown3s];
     public Bone(string name): this(name,[],[],[])
     {
 
@@ -36,9 +36,12 @@ public static class BoneExt
     {
         writer.Endianness = IO.Endianness.Big;
         writer.WritePascal64String(bone.Name);
-        writer.WriteVectors3(bone.Unknown2s);
-        writer.Write(bone.Unknown3s,(w,v) => {w.Write(v.X);w.Write(v.Y);w.Write(v.Z);w.Write(v.W);});
-        writer.WriteVectors3(bone.Unknown4s);
+        writer.Write((ulong)bone.Unknown1s.Count);
+        writer.WriteVectors3(bone.Unknown1s);
+        writer.Write((ulong)bone.Unknown2s.Count);
+        writer.Write(bone.Unknown2s,(w,v) => {w.Write(v.X);w.Write(v.Y);w.Write(v.Z);w.Write(v.W);});
+        writer.Write((ulong)bone.Unknown3s.Count);
+        writer.WriteVectors3(bone.Unknown3s);
     }
     public static List<Bone> ReadSGABones(this Reader reader,ulong count)
     {
