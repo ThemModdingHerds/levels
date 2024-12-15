@@ -57,7 +57,8 @@ public class LevelPack(string folder,IEnumerable<string> textures,WorldData worl
             if(!File.Exists($"{levelPath}.lvl")) continue;
             levels.Add(LevelData.Read(levelPath));
         }
-        string[] textures = Directory.GetFiles(Path.Combine(folder,TEXTURES_FOLDER),"*.*",SearchOption.AllDirectories);
+        string texturesPath = Path.Combine(folder,TEXTURES_FOLDER);
+        string[] textures = Directory.Exists(texturesPath) ? Directory.GetFiles(texturesPath,"*.*",SearchOption.AllDirectories) : [];
         return new(folder,textures,worlds,levels);
     }
     public static LevelPack Combine(string folder,params LevelPack[] packs)
@@ -69,11 +70,7 @@ public class LevelPack(string folder,IEnumerable<string> textures,WorldData worl
         List<LevelData> levels = [];
         foreach(LevelPack p in packs)
         foreach(LevelData data in p.Levels)
-        {
-            if(levels.Find((l) => l.Name == data.Name) != null)
-                throw new Exception($"level '{data.Name}' already exists");
             levels.Add(data);
-        }
         return new(folder,textures,WorldData.Combine([..from p in packs select p.Worlds]),levels);
     }
 }
