@@ -44,11 +44,7 @@ public class WorldData(string filename,IEnumerable<WorldEntry> entries) : IParsa
         WorldData worlds = new();
         foreach(WorldData world in data)
         foreach(WorldEntry entry in world.Entries)
-        {
-            if(worlds.Entries.Find((e) => e.Name == entry.Name) != null)
-                throw new Exception($"{entry.Name} already exists");
             worlds.Entries.Add(entry);
-        }
         return worlds;
     }
     public static WorldData Read(string path)
