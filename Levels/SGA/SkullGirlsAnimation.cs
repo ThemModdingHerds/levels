@@ -25,9 +25,9 @@ public static class SkullGirlsAnimationExt
     {
         reader.Endianness = IO.Endianness.Big;
         string version = reader.ReadPascal64String();
-        uint unknown = reader.ReadUInt();
         if(version != SkullGirlsAnimation.VERSION)
             throw new Exception($"SGI version mismatch: got '{version}', expected '{SkullGirlsAnimation.VERSION}'");
+        uint unknown = reader.ReadUInt();
         ulong bonesC = reader.ReadULong();
         ulong tracksC = reader.ReadULong();
         float animationLengthInSeconds = reader.ReadFloat();
@@ -40,9 +40,9 @@ public static class SkullGirlsAnimationExt
         writer.Endianness = IO.Endianness.Big;
         writer.WritePascal64String(file.Version);
         writer.Write(file.Unknown);
-        writer.Write(file.AnimationLengthInSeconds);
         writer.Write((ulong)file.Bones.Count);
         writer.Write((ulong)file.UVTracks.Count);
+        writer.Write(file.AnimationLengthInSeconds);
         writer.Write(file.Bones);
         writer.Write(file.UVTracks);
     }

@@ -18,6 +18,11 @@ public class LevelPack(string folder,IEnumerable<string> textures,WorldData worl
     }
     public void Save(string folder,bool overwrite = true)
     {
+        if(Directory.Exists(folder))
+        {
+            if(!overwrite) throw new Exception($"{folder} already exists!");
+            Directory.Delete(folder,true);
+        }
         Directory.CreateDirectory(folder);
         string worldspath = Path.Combine(folder,Worlds.FileName);
         Worlds.Save(worldspath,overwrite);
@@ -31,7 +36,7 @@ public class LevelPack(string folder,IEnumerable<string> textures,WorldData worl
             File.Copy(texture,Path.Combine(folder,path),overwrite);
         }
     }
-    public void Save() => Save(Folder);
+    public void Save(bool overwrite = true) => Save(Folder,overwrite);
     public static LevelPack Read(string folder)
     {
         string worldspath = Path.Combine(folder,WorldData.FILENAME);
@@ -52,7 +57,8 @@ public class LevelPack(string folder,IEnumerable<string> textures,WorldData worl
             if(!File.Exists($"{levelPath}.lvl")) continue;
             levels.Add(LevelData.Read(levelPath));
         }
-        return new(folder,Directory.GetFiles(Path.Combine(folder,TEXTURES_FOLDER),"*.*",SearchOption.AllDirectories),worlds,levels);
+        string[] textures = Directory.GetFiles(Path.Combine(folder,TEXTURES_FOLDER),"*.*",SearchOption.AllDirectories);
+        return new(folder,textures,worlds,levels);
     }
     public static LevelPack Combine(string folder,params LevelPack[] packs)
     {

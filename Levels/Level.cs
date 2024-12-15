@@ -57,7 +57,7 @@ public class Level : IParsable<Level>
             ..from light in Lights select light.ToString(),
             Sun,
             Projection,
-            $"SHADOWDIST: {ShadowDistance}",
+            $"SHADOWDIST {ShadowDistance}",
             Reverb,
             Background2D,
             Background3D,
