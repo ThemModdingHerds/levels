@@ -58,7 +58,7 @@ public class LevelPack(string folder,IEnumerable<string> textures,WorldData worl
             levels.Add(LevelData.Read(levelPath));
         }
         string texturesPath = Path.Combine(folder,TEXTURES_FOLDER);
-        string[] textures = Directory.Exists(texturesPath) ? Directory.GetFiles(texturesPath,"*.*",SearchOption.AllDirectories) : [];
+        IEnumerable<string> textures = Directory.Exists(texturesPath) ? Directory.EnumerateFiles(texturesPath,"*.*",SearchOption.AllDirectories) : [];
         return new(folder,textures,worlds,levels);
     }
     public static LevelPack Combine(string folder,params LevelPack[] packs)
