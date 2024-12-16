@@ -39,12 +39,16 @@ public class WorldData(string filename,IEnumerable<WorldEntry> entries) : IParsa
         }
         File.WriteAllText(file,ToString());
     }
+    public void Add(params WorldData[] worlds)
+    {
+        foreach(WorldData data in worlds)
+            Entries.AddRange(data.Entries);
+    }
     public static WorldData Combine(params WorldData[] data)
     {
         WorldData worlds = new();
         foreach(WorldData world in data)
-        foreach(WorldEntry entry in world.Entries)
-            worlds.Entries.Add(entry);
+            worlds.Add(world);
         return worlds;
     }
     public static WorldData Read(string path)

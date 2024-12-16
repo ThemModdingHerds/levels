@@ -28,12 +28,14 @@ public class LevelPack(string folder,IEnumerable<string> textures,WorldData worl
         Worlds.Save(worldspath,overwrite);
         foreach(LevelData level in Levels)
             level.Save(folder,overwrite);
+        string thisTexturesFolder = Path.Combine(Folder,TEXTURES_FOLDER);
+        string outputTexturesFolder = Path.Combine(folder,TEXTURES_FOLDER);
         foreach(string texture in Textures)
         {
-            string path = Path.GetRelativePath(Folder,texture);
-            string texturepath = Path.Combine(folder,path);
-            Directory.CreateDirectory(Path.GetDirectoryName(texturepath) ?? throw new Exception("couldn't get folder"));
-            File.Copy(texture,Path.Combine(folder,path),overwrite);
+            string relTexturePath = Path.GetRelativePath(thisTexturesFolder,texture);
+            string output = Path.Combine(outputTexturesFolder,relTexturePath);
+            Directory.CreateDirectory(Path.GetDirectoryName(output) ?? throw new Exception("couldn't get folder"));
+            File.Copy(texture,output,overwrite);
         }
     }
     public void Save(bool overwrite = true) => Save(Folder,overwrite);
@@ -61,16 +63,15 @@ public class LevelPack(string folder,IEnumerable<string> textures,WorldData worl
         IEnumerable<string> textures = Directory.Exists(texturesPath) ? Directory.EnumerateFiles(texturesPath,"*.*",SearchOption.AllDirectories) : [];
         return new(folder,textures,worlds,levels);
     }
-    public static LevelPack Combine(string folder,params LevelPack[] packs)
+    public void Add(params LevelPack[] packs)
     {
-        HashSet<string> textures = [];
         foreach(LevelPack p in packs)
-        foreach(string ptexture in p.Textures)
-            textures.Add(ptexture);
-        List<LevelData> levels = [];
-        foreach(LevelPack p in packs)
-        foreach(LevelData data in p.Levels)
-            levels.Add(data);
-        return new(folder,textures,WorldData.Combine([..from p in packs select p.Worlds]),levels);
+        {
+            foreach(string ptexture in p.Textures)
+                Textures.Add(ptexture);
+            Worlds.Add(p.Worlds);
+            foreach(LevelData data in p.Levels)
+                Levels.Add(data);
+        }
     }
 }
