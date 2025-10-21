@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>ThemModdingHerds.$(MSBuildProjectName)</AssemblyName>
+    <Version>1.0.0</Version>
+    <Authors>NightTheFox</Authors>
+    <Description>basic 3D model library</Description>
+    <PackageProjectUrl>https://github.com/ThemModdingHerds</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ThemModdingHerds/levels</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageOutputPath>bin\Package</PackageOutputPath>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageIcon>icon.png</PackageIcon>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageTags>library;obj;wavefront;3d;model</PackageTags>
+    <RootNamespace>ThemModdingHerds.Models</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Update="README.md">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+    </None>
+    <None Update="LICENSE">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+    </None>
+    <None Include="icon.png" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="9.0.0" />
+    <PackageReference Include="ThemModdingHerds.IO" Version="1.3.0" />
+  </ItemGroup>
+
+</Project>
