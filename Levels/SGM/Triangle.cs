@@ -1,4 +1,5 @@
 ﻿using ThemModdingHerds.IO.Binary;
+using ThemModdingHerds.Models;
 
 namespace ThemModdingHerds.Levels.SGM;
 public class Triangle(short x,short y,short z)
@@ -13,6 +14,12 @@ public class Triangle(short x,short y,short z)
     public override string ToString()
     {
         return $"[{X},{Y},{Z}]";
+    }
+    public Face GetFace()
+    {
+        Face f = new(X,Y,Z);
+        f.SetNaive();
+        return f;
     }
 }
 public static class TriangleExt

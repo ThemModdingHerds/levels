@@ -9,31 +9,42 @@ public class LevelData(string name,Level lvl)
 {
     public string Name {get;set;} = name;
     public Level Lvl {get;set;} = lvl;
-    public Dictionary<string,SkullGirlsAnimation> Animations {get;set;} = [];
-    public SkullGirlsIndex? Background {get;set;} = new();
-    public Dictionary<string,SkullGirlsModel> Models {get;set;} = [];
-    public Dictionary<string,SkullGirlsSkeleton> Skeletons {get;set;} = [];
+    public Dictionary<string,SGAnimation> Animations {get;set;} = [];
+    public SGIndex? Background {get;set;} = new();
+    public Dictionary<string,SGModel> Models {get;set;} = [];
+    public Dictionary<string,SGSkeleton> Skeletons {get;set;} = [];
     public LevelData(): this(string.Empty,new())
     {
 
     }
-    public SkullGirlsModel? GetModelFromElement(Element element)
+    public SGModel? GetModelFromElement(Element element)
     {
         string key = $"{element.Name}.sgm.msb";
-        if(Models.TryGetValue(key,out SkullGirlsModel? sgm))
+        if(Models.TryGetValue(key,out SGModel? sgm))
             return sgm;
         return null;
     }
-    public SkullGirlsAnimation? GetAnimationFromElementAnimation(Animation animation)
+    public SGAnimation? GetAnimationFromElementAnimation(Animation animation)
     {
         string key = $"{animation.FileName}.sga.msb";
-        if(Animations.TryGetValue(key,out SkullGirlsAnimation? sga))
+        if(Animations.TryGetValue(key,out SGAnimation? sga))
             return sga;
         return null;
     }
-    public List<SkullGirlsAnimation> GetAnimationsFromElement(Element element)
+    public List<SGAnimation> GetAnimationsFromElement(Element element)
     {
         return [..from animation in element.Animations select GetAnimationFromElementAnimation(animation)];
+    }
+    public SGSkeleton? GetSkeleton(SGModel model)
+    {
+        foreach(var pair in Skeletons)
+        foreach(SGS.Bone bone in pair.Value.Bones)
+        foreach(string boneName in model.Bones)
+        {
+            if(boneName == bone.Name)
+                return pair.Value;
+        }
+        return null;
     }
     public void Save(string path,bool overwrite = true)
     {
@@ -42,7 +53,7 @@ public class LevelData(string name,Level lvl)
         if(Background != null) 
         {
             Directory.CreateDirectory(folder);
-            string filepath = Path.Combine(folder,SkullGirlsIndex.FILENAME);
+            string filepath = Path.Combine(folder,SGIndex.FILENAME);
             Writer writer = new(filepath);
             writer.Write(Background);
             writer.Close();
@@ -79,13 +90,13 @@ public class LevelData(string name,Level lvl)
         string name = Path.GetFileName(path);
         Level level = Level.Read($"{path}.lvl");
         string[] files = Directory.Exists(path) ? Directory.GetFiles(path) : [];
-        Dictionary<string,SkullGirlsAnimation> animations = [];
-        Dictionary<string,SkullGirlsModel> models = [];
-        Dictionary<string,SkullGirlsSkeleton> skeletons = [];
-        SkullGirlsIndex? background = null;
+        Dictionary<string,SGAnimation> animations = [];
+        Dictionary<string,SGModel> models = [];
+        Dictionary<string,SGSkeleton> skeletons = [];
+        SGIndex? background = null;
         if(Directory.Exists(path))
         {
-            string backgroundPath = Path.Combine(path,SkullGirlsIndex.FILENAME);
+            string backgroundPath = Path.Combine(path,SGIndex.FILENAME);
             Reader backgroundReader = new(backgroundPath);
             background = backgroundReader.ReadSGIFile();
         }
